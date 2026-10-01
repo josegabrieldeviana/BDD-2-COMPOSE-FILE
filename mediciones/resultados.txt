@@ -1,0 +1,265 @@
++---------------------+--------+
+| tabla               | filas  |
++---------------------+--------+
+| region              |      3 |
+| aeropuerto          |     42 |
+| hub                 |     10 |
+| pasajero            | 100000 |
+| tarifa              |     50 |
+| boleto              | 200000 |
+| vuelo_programado    |  50000 |
+| vuelo_operado       |  50000 |
+| reserva_pnr         | 100000 |
+| equipaje            | 100000 |
+| movimiento_equipaje | 300000 |
+| check_in            |      0 |
+| pase_abordaje       |      0 |
+| asignacion_puerta   |      0 |
+| segmento_boleto     |      0 |
++---------------------+--------+
++---------------------------------------------------------+-------+
+| chequeo                                                 | casos |
++---------------------------------------------------------+-------+
+| boletos con evento anterior a la emision                |     0 |
+| boletos con tarifa_base distinta al precio de su tarifa |     0 |
+| vuelos que llegan antes de salir                        |     0 |
+| vuelos operados en el futuro                            |     0 |
+| movimientos de boletos no usados                        |     0 |
+| maletas de un pasajero distinto al del boleto           |     0 |
+| movimientos anteriores al REGISTRADO de su maleta       |     0 |
+| PNR del movimiento de otro pasajero                     |     0 |
+| movimientos en el futuro                                |     0 |
++---------------------------------------------------------+-------+
++---------------------+------------+----------------+-------------+--------------+---------------+
+| TABLE_NAME          | TABLE_ROWS | AVG_ROW_LENGTH | DATA_LENGTH | INDEX_LENGTH | paginas_datos |
++---------------------+------------+----------------+-------------+--------------+---------------+
+| aeropuerto          |         42 |            390 |       16384 |        16384 |             1 |
+| asignacion_puerta   |          0 |              0 |       16384 |        16384 |             1 |
+| boleto              |     199124 |             87 |    17350656 |     22593536 |          1059 |
+| check_in            |          0 |              0 |       16384 |        16384 |             1 |
+| equipaje            |      99059 |             47 |     4734976 |      5783552 |           289 |
+| hub                 |         10 |           1638 |       16384 |        16384 |             1 |
+| movimiento_equipaje |     298917 |             79 |    23658496 |     49479680 |          1444 |
+| pasajero            |      98848 |             37 |     3686400 |            0 |           225 |
+| pase_abordaje       |          0 |              0 |       16384 |        49152 |             1 |
+| region              |          3 |           5461 |       16384 |            0 |             1 |
+| reserva_pnr         |      98551 |            229 |    22593536 |      5275648 |          1379 |
+| segmento_boleto     |          0 |              0 |       16384 |        49152 |             1 |
+| tarifa              |         50 |            327 |       16384 |            0 |             1 |
+| vuelo_operado       |      50181 |             73 |     3686400 |      1589248 |           225 |
+| vuelo_programado    |      48990 |             53 |     2637824 |      1589248 |           161 |
++---------------------+------------+----------------+-------------+--------------+---------------+
++----------------------------------------+----------------+
+| columna                                | bytes_promedio |
++----------------------------------------+----------------+
+| movimiento_equipaje.tipo_evento        |           8.70 |
+| boleto.estado                          |           5.82 |
+| vuelo_operado.estado                   |           8.30 |
+| reserva_pnr.itinerario_vuelos          |          52.08 |
+| reserva_pnr.info_contacto              |          60.06 |
+| reserva_pnr.ente_realizador_de_reserva |          11.97 |
++----------------------------------------+----------------+
++--------+------------+-------------------+--------------+---------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table  | Non_unique | Key_name          | Seq_in_index | Column_name   | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++--------+------------+-------------------+--------------+---------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| boleto |          0 | PRIMARY           |            1 | id_boleto     | A         |      199124 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| boleto |          0 | idx_boleto_numero |            1 | numero_boleto | A         |      199124 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| boleto |          1 | id_pasajero       |            1 | id_pasajero   | A         |       87340 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| boleto |          1 | id_tarifa         |            1 | id_tarifa     | A         |          48 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++--------+------------+-------------------+--------------+---------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
++------------------+------------+------------------------+--------------+---------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table            | Non_unique | Key_name               | Seq_in_index | Column_name         | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++------------------+------------+------------------------+--------------+---------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| vuelo_programado |          0 | PRIMARY                |            1 | id_vuelo_programado | A         |       48990 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| vuelo_programado |          1 | idx_vprog_fecha_salida |            1 | fecha_salida        | A         |       47443 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++------------------+------------+------------------------+--------------+---------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
++---------------------+------------+----------------------+--------------+------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table               | Non_unique | Key_name             | Seq_in_index | Column_name      | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------------------+------------+----------------------+--------------+------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| movimiento_equipaje |          0 | PRIMARY              |            1 | id_movimiento    | A         |      298917 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| movimiento_equipaje |          1 | id_boleto            |            1 | id_boleto        | A         |       68308 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| movimiento_equipaje |          1 | id_codigo_pnr        |            1 | id_codigo_pnr    | A         |       45172 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| movimiento_equipaje |          1 | idx_mov_etiqueta_ts  |            1 | codigo_etiqueta  | A         |       99918 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| movimiento_equipaje |          1 | idx_mov_etiqueta_ts  |            2 | timestamp_evento | A         |      291564 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| movimiento_equipaje |          1 | idx_mov_evento_fecha |            1 | tipo_evento      | A         |           4 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| movimiento_equipaje |          1 | idx_mov_evento_fecha |            2 | timestamp_evento | A         |      229813 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++---------------------+------------+----------------------+--------------+------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
++---------------+------------+----------------------+--------------+-------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table         | Non_unique | Key_name             | Seq_in_index | Column_name       | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------------+------------+----------------------+--------------+-------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| vuelo_operado |          0 | PRIMARY              |            1 | id_vuelo_operado  | A         |       50181 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| vuelo_operado |          1 | idx_vop_numero_fecha |            1 | numero_vuelo      | A         |         790 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| vuelo_operado |          1 | idx_vop_numero_fecha |            2 | fecha_salida_real | A         |       48960 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++---------------+------------+----------------------+--------------+-------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
++-------------+------------+-------------------+--------------+-------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table       | Non_unique | Key_name          | Seq_in_index | Column_name       | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-------------+------------+-------------------+--------------+-------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| reserva_pnr |          0 | PRIMARY           |            1 | id_reserva_pnr    | A         |       98551 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| reserva_pnr |          1 | id_pasajero       |            1 | id_pasajero       | A         |       98551 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| reserva_pnr |          1 | ft_pnr_itinerario |            1 | itinerario_vuelos | NULL      |       98551 |     NULL |   NULL | YES  | FULLTEXT   |         |               | YES     | NULL       |
+| reserva_pnr |          1 | ft_pnr_contacto   |            1 | info_contacto     | NULL      |       98551 |     NULL |   NULL | YES  | FULLTEXT   |         |               | YES     | NULL       |
++-------------+------------+-------------------+--------------+-------------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
++----+-------------+--------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------+
+| id | select_type | table  | partitions | type  | possible_keys     | key               | key_len | ref   | rows | filtered | Extra |
++----+-------------+--------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | boleto | NULL       | const | idx_boleto_numero | idx_boleto_numero | 53      | const |    1 |   100.00 | NULL  |
++----+-------------+--------+------------+-------+-------------------+-------------------+---------+-------+------+----------+-------+
+*************************** 1. row ***************************
+EXPLAIN: -> Rows fetched before execution  (cost=0..0 rows=1) (actual time=63e-6..104e-6 rows=1 loops=1)
+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (boleto.numero_boleto = '0011204567884')  (cost=20177 rows=1) (actual time=42.8..69.5 rows=1 loops=1)
+    -> Table scan on boleto  (cost=20177 rows=199124) (actual time=0.14..52.9 rows=200000 loops=1)
+
++----+-------------+------------------+------------+-------+------------------------+------------------------+---------+------+------+----------+--------------------------+
+| id | select_type | table            | partitions | type  | possible_keys          | key                    | key_len | ref  | rows | filtered | Extra                    |
++----+-------------+------------------+------------+-------+------------------------+------------------------+---------+------+------+----------+--------------------------+
+|  1 | SIMPLE      | vuelo_programado | NULL       | range | idx_vprog_fecha_salida | idx_vprog_fecha_salida | 5       | NULL |  780 |   100.00 | Using where; Using index |
++----+-------------+------------------+------------+-------+------------------------+------------------------+---------+------+------+----------+--------------------------+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (vuelo_programado.fecha_salida between '2026-08-01' and '2026-08-07')  (cost=158 rows=780) (actual time=0.0842..0.516 rows=780 loops=1)
+    -> Covering index range scan on vuelo_programado using idx_vprog_fecha_salida over ('2026-08-01 00:00:00' <= fecha_salida <= '2026-08-07 00:00:00')  (cost=158 rows=780) (actual time=0.0803..0.182 rows=780 loops=1)
+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (vuelo_programado.fecha_salida between '2026-08-01' and '2026-08-07')  (cost=5059 rows=5443) (actual time=0.499..21.2 rows=780 loops=1)
+    -> Table scan on vuelo_programado  (cost=5059 rows=48990) (actual time=0.49..7.75 rows=50000 loops=1)
+
++----+-------------+------------------+------------+------+------------------------+------+---------+------+-------+----------+-------------+
+| id | select_type | table            | partitions | type | possible_keys          | key  | key_len | ref  | rows  | filtered | Extra       |
++----+-------------+------------------+------------+------+------------------------+------+---------+------+-------+----------+-------------+
+|  1 | SIMPLE      | vuelo_programado | NULL       | ALL  | idx_vprog_fecha_salida | NULL | NULL    | NULL | 48990 |    50.00 | Using where |
++----+-------------+------------------+------------+------+------------------------+------+---------+------+-------+----------+-------------+
++----+-------------+---------------+------------+------+----------------------+----------------------+---------+-------+------+----------+--------------------------+
+| id | select_type | table         | partitions | type | possible_keys        | key                  | key_len | ref   | rows | filtered | Extra                    |
++----+-------------+---------------+------------+------+----------------------+----------------------+---------+-------+------+----------+--------------------------+
+|  1 | SIMPLE      | vuelo_operado | NULL       | ref  | idx_vop_numero_fecha | idx_vop_numero_fecha | 25      | const |   62 |   100.00 | Using where; Using index |
++----+-------------+---------------+------------+------+----------------------+----------------------+---------+-------+------+----------+--------------------------+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (vuelo_operado.numero_vuelo = 'AA1234')  (cost=7.47 rows=62) (actual time=0.0213..0.0339 rows=62 loops=1)
+    -> Covering index lookup on vuelo_operado using idx_vop_numero_fecha (numero_vuelo='AA1234')  (cost=7.47 rows=62) (actual time=0.0203..0.0256 rows=62 loops=1)
+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (vuelo_operado.numero_vuelo = 'AA1234')  (cost=5074 rows=63.5) (actual time=0.406..9.56 rows=62 loops=1)
+    -> Table scan on vuelo_operado  (cost=5074 rows=50181) (actual time=0.387..6.5 rows=50000 loops=1)
+
++----+-------------+---------------------+------------+------+---------------------+---------------------+---------+-------+------+----------+-----------------------+
+| id | select_type | table               | partitions | type | possible_keys       | key                 | key_len | ref   | rows | filtered | Extra                 |
++----+-------------+---------------------+------------+------+---------------------+---------------------+---------+-------+------+----------+-----------------------+
+|  1 | SIMPLE      | movimiento_equipaje | NULL       | ref  | idx_mov_etiqueta_ts | idx_mov_etiqueta_ts | 40      | const |    3 |   100.00 | Using index condition |
++----+-------------+---------------------+------------+------+---------------------+---------------------+---------+-------+------+----------+-----------------------+
+*************************** 1. row ***************************
+EXPLAIN: -> Index lookup on movimiento_equipaje using idx_mov_etiqueta_ts (codigo_etiqueta='0001012345'), with index condition: (movimiento_equipaje.codigo_etiqueta = '0001012345')  (cost=1.05 rows=3) (actual time=0.0319..0.0336 rows=3 loops=1)
+
+*************************** 1. row ***************************
+EXPLAIN: -> Sort: movimiento_equipaje.timestamp_evento  (cost=30253 rows=298917) (actual time=74.6..74.6 rows=3 loops=1)
+    -> Filter: (movimiento_equipaje.codigo_etiqueta = '0001012345')  (cost=30253 rows=298917) (actual time=45.2..74.5 rows=3 loops=1)
+        -> Table scan on movimiento_equipaje  (cost=30253 rows=298917) (actual time=0.141..52.1 rows=300000 loops=1)
+
++----+-------------+-------------+------------+----------+-------------------+-------------------+---------+-------+------+----------+-------------------------------+
+| id | select_type | table       | partitions | type     | possible_keys     | key               | key_len | ref   | rows | filtered | Extra                         |
++----+-------------+-------------+------------+----------+-------------------+-------------------+---------+-------+------+----------+-------------------------------+
+|  1 | SIMPLE      | reserva_pnr | NULL       | fulltext | ft_pnr_itinerario | ft_pnr_itinerario | 0       | const |    1 |   100.00 | Using where; Ft_hints: sorted |
++----+-------------+-------------+------------+----------+-------------------+-------------------+---------+-------+------+----------+-------------------------------+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (match reserva_pnr.itinerario_vuelos against ('MIA'))  (cost=1.1 rows=1) (actual time=0.856..38.2 rows=7063 loops=1)
+    -> Full-text index search on reserva_pnr using ft_pnr_itinerario (itinerario_vuelos='MIA')  (cost=1.1 rows=1) (actual time=0.854..37.8 rows=7063 loops=1)
+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (reserva_pnr.itinerario_vuelos like '%MIA%')  (cost=11233 rows=10949) (actual time=0.0249..62.7 rows=7063 loops=1)
+    -> Table scan on reserva_pnr  (cost=11233 rows=98551) (actual time=0.0129..33.7 rows=100000 loops=1)
+
++----+-------------+-------------+------------+----------+-----------------+-----------------+---------+-------+------+----------+-----------------------------------+
+| id | select_type | table       | partitions | type     | possible_keys   | key             | key_len | ref   | rows | filtered | Extra                             |
++----+-------------+-------------+------------+----------+-----------------+-----------------+---------+-------+------+----------+-----------------------------------+
+|  1 | SIMPLE      | reserva_pnr | NULL       | fulltext | ft_pnr_contacto | ft_pnr_contacto | 0       | const |    1 |   100.00 | Using where; Ft_hints: no_ranking |
++----+-------------+-------------+------------+----------+-----------------+-----------------+---------+-------+------+----------+-----------------------------------+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (match reserva_pnr.info_contacto against ('+Sofia +Diaz' in boolean mode))  (cost=1.1 rows=1) (actual time=0.299..5.1 rows=701 loops=1)
+    -> Full-text index search on reserva_pnr using ft_pnr_contacto (info_contacto='+Sofia +Diaz')  (cost=1.1 rows=1) (actual time=0.297..5.05 rows=701 loops=1)
+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: ((reserva_pnr.info_contacto like '%Sofia%') and (reserva_pnr.info_contacto like '%Diaz%'))  (cost=11233 rows=1216) (actual time=0.0205..68.9 rows=701 loops=1)
+    -> Table scan on reserva_pnr  (cost=11233 rows=98551) (actual time=0.0121..33.8 rows=100000 loops=1)
+
++---------------------+------------------------+--------------+------------+
+| table_name          | index_name             | stat_name    | stat_value |
++---------------------+------------------------+--------------+------------+
+| boleto              | idx_boleto_numero      | n_leaf_pages |        351 |
+| boleto              | idx_boleto_numero      | size         |        417 |
+| movimiento_equipaje | idx_mov_etiqueta_ts    | n_leaf_pages |        546 |
+| movimiento_equipaje | idx_mov_etiqueta_ts    | size         |        675 |
+| movimiento_equipaje | idx_mov_evento_fecha   | n_leaf_pages |        521 |
+| movimiento_equipaje | idx_mov_evento_fecha   | size         |        611 |
+| vuelo_operado       | idx_vop_numero_fecha   | n_leaf_pages |         79 |
+| vuelo_operado       | idx_vop_numero_fecha   | size         |         97 |
+| vuelo_programado    | idx_vprog_fecha_salida | n_leaf_pages |         57 |
+| vuelo_programado    | idx_vprog_fecha_salida | size         |         97 |
++---------------------+------------------------+--------------+------------+
++----------------+-------------+---------------------+------------------+
+| clase_servicio | incidencias | pasajeros_afectados | peso_promedio_kg |
++----------------+-------------+---------------------+------------------+
+| J              |         414 |                 401 |            18.61 |
+| Y              |         868 |                 836 |            18.36 |
++----------------+-------------+---------------------+------------------+
++----------------+-------------+
+| clase_servicio | incidencias |
++----------------+-------------+
+| F              |         116 |
+| Y              |         868 |
+| J              |         414 |
++----------------+-------------+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (count(0) >= 200)  (actual time=117..117 rows=2 loops=1)
+    -> Group aggregate: count(0), avg(movimiento_equipaje.peso_kg), count(0), count(distinct equipaje.id_pasajero)  (actual time=117..117 rows=3 loops=1)
+        -> Sort: b.clase_servicio  (actual time=117..117 rows=1398 loops=1)
+            -> Stream results  (cost=37226 rows=2214) (actual time=65.4..116 rows=1398 loops=1)
+                -> Nested loop inner join  (cost=37226 rows=2214) (actual time=65.4..116 rows=1398 loops=1)
+                    -> Nested loop inner join  (cost=34902 rows=6641) (actual time=65.3..114 rows=1953 loops=1)
+                        -> Nested loop inner join  (cost=32577 rows=6641) (actual time=65.3..110 rows=1953 loops=1)
+                            -> Filter: ((m.tipo_evento in ('EXTRAVIADO','DANADO')) and (m.timestamp_evento >= TIMESTAMP'2026-07-01 00:00:00') and (m.timestamp_evento < TIMESTAMP'2026-10-01 00:00:00') and (m.id_boleto is not null))  (cost=30253 rows=6641) (actual time=65.3..90.5 rows=1953 loops=1)
+                                -> Table scan on m  (cost=30253 rows=298917) (actual time=0.173..66.3 rows=300000 loops=1)
+                            -> Single-row index lookup on e using PRIMARY (id=m.codigo_etiqueta)  (cost=0.25 rows=1) (actual time=0.01..0.01 rows=1 loops=1953)
+                        -> Filter: (b.id_tarifa is not null)  (cost=0.25 rows=1) (actual time=0.00182..0.0019 rows=1 loops=1953)
+                            -> Single-row index lookup on b using PRIMARY (id_boleto=m.id_boleto)  (cost=0.25 rows=1) (actual time=0.00171..0.00174 rows=1 loops=1953)
+                    -> Filter: (t.precio >= 300.00)  (cost=0.25 rows=0.333) (actual time=731e-6..783e-6 rows=0.716 loops=1953)
+                        -> Single-row index lookup on t using PRIMARY (id=b.id_tarifa)  (cost=0.25 rows=1) (actual time=559e-6..583e-6 rows=1 loops=1953)
+
++----+-------------+-------+------------+--------+----------------------------------------------------+----------------------+---------+----------------------+------+----------+---------------------------------------------------------------------+
+| id | select_type | table | partitions | type   | possible_keys                                      | key                  | key_len | ref                  | rows | filtered | Extra                                                               |
++----+-------------+-------+------------+--------+----------------------------------------------------+----------------------+---------+----------------------+------+----------+---------------------------------------------------------------------+
+|  1 | SIMPLE      | m     | NULL       | range  | id_boleto,idx_mov_etiqueta_ts,idx_mov_evento_fecha | idx_mov_evento_fecha | 88      | NULL                 | 1953 |   100.00 | Using index condition; Using where; Using temporary; Using filesort |
+|  1 | SIMPLE      | e     | NULL       | eq_ref | PRIMARY                                            | PRIMARY              | 40      | G8.m.codigo_etiqueta |    1 |   100.00 | NULL                                                                |
+|  1 | SIMPLE      | b     | NULL       | eq_ref | PRIMARY,id_tarifa                                  | PRIMARY              | 8       | G8.m.id_boleto       |    1 |   100.00 | Using where                                                         |
+|  1 | SIMPLE      | t     | NULL       | eq_ref | PRIMARY                                            | PRIMARY              | 8       | G8.b.id_tarifa       |    1 |    33.33 | Using where                                                         |
++----+-------------+-------+------------+--------+----------------------------------------------------+----------------------+---------+----------------------+------+----------+---------------------------------------------------------------------+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (count(0) >= 200)  (actual time=24.8..25 rows=2 loops=1)
+    -> Group aggregate: count(0), avg(movimiento_equipaje.peso_kg), count(0), count(distinct equipaje.id_pasajero)  (actual time=24.7..25 rows=3 loops=1)
+        -> Sort: b.clase_servicio  (actual time=24.6..24.7 rows=1398 loops=1)
+            -> Stream results  (cost=2930 rows=651) (actual time=0.421..24.2 rows=1398 loops=1)
+                -> Nested loop inner join  (cost=2930 rows=651) (actual time=0.419..24 rows=1398 loops=1)
+                    -> Nested loop inner join  (cost=2246 rows=1953) (actual time=0.407..22.3 rows=1953 loops=1)
+                        -> Nested loop inner join  (cost=1563 rows=1953) (actual time=0.402..18.6 rows=1953 loops=1)
+                            -> Filter: (m.id_boleto is not null)  (cost=879 rows=1953) (actual time=0.394..3.94 rows=1953 loops=1)
+                                -> Index range scan on m using idx_mov_evento_fecha over (tipo_evento = 'DANADO' AND '2026-07-01 00:00:00' <= timestamp_evento < '2026-10-01 00:00:00') OR (tipo_evento = 'EXTRAVIADO' AND '2026-07-01 00:00:00' <= timestamp_evento < '2026-10-01 00:00:00'), with index condition: ((m.tipo_evento in ('EXTRAVIADO','DANADO')) and (m.timestamp_evento >= TIMESTAMP'2026-07-01 00:00:00') and (m.timestamp_evento < TIMESTAMP'2026-10-01 00:00:00'))  (cost=879 rows=1953) (actual time=0.393..3.83 rows=1953 loops=1)
+                            -> Single-row index lookup on e using PRIMARY (id=m.codigo_etiqueta)  (cost=0.25 rows=1) (actual time=0.00737..0.00739 rows=1 loops=1953)
+                        -> Filter: (b.id_tarifa is not null)  (cost=0.25 rows=1) (actual time=0.00167..0.00174 rows=1 loops=1953)
+                            -> Single-row index lookup on b using PRIMARY (id_boleto=m.id_boleto)  (cost=0.25 rows=1) (actual time=0.00155..0.00157 rows=1 loops=1953)
+                    -> Filter: (t.precio >= 300.00)  (cost=0.25 rows=0.333) (actual time=738e-6..789e-6 rows=0.716 loops=1953)
+                        -> Single-row index lookup on t using PRIMARY (id=b.id_tarifa)  (cost=0.25 rows=1) (actual time=556e-6..579e-6 rows=1 loops=1953)
+
+*************************** 1. row ***************************
+EXPLAIN: -> Filter: (count(0) >= 200)  (actual time=867..867 rows=2 loops=1)
+    -> Group aggregate: count(0), avg(movimiento_equipaje.peso_kg), count(0), count(distinct equipaje.id_pasajero)  (actual time=867..867 rows=3 loops=1)
+        -> Sort: b.clase_servicio  (actual time=866..867 rows=1398 loops=1)
+            -> Stream results  (cost=127250 rows=3457) (actual time=0.669..865 rows=1398 loops=1)
+                -> Nested loop inner join  (cost=127250 rows=3457) (actual time=0.668..864 rows=1398 loops=1)
+                    -> Nested loop inner join  (cost=126040 rows=3457) (actual time=0.664..854 rows=1398 loops=1)
+                        -> Nested loop inner join  (cost=20155 rows=69133) (actual time=0.537..206 rows=139837 loops=1)
+                            -> Filter: (t.precio >= 300.00)  (cost=5.25 rows=16.7) (actual time=0.0166..0.21 rows=38 loops=1)
+                                -> Table scan on t  (cost=5.25 rows=50) (actual time=0.0143..0.0828 rows=50 loops=1)
+                            -> Index lookup on b using id_tarifa (id_tarifa=t.id)  (cost=819 rows=4148) (actual time=0.585..5.23 rows=3680 loops=38)
+                        -> Filter: ((m.tipo_evento in ('EXTRAVIADO','DANADO')) and (m.timestamp_evento >= TIMESTAMP'2026-07-01 00:00:00') and (m.timestamp_evento < TIMESTAMP'2026-10-01 00:00:00'))  (cost=1.09 rows=0.05) (actual time=0.00454..0.00455 rows=0.01 loops=139837)
+                            -> Index lookup on m using id_boleto (id_boleto=b.id_boleto)  (cost=1.09 rows=4.38) (actual time=0.00385..0.00429 rows=1.5 loops=139837)
+                    -> Single-row index lookup on e using PRIMARY (id=m.codigo_etiqueta)  (cost=0.25 rows=1) (actual time=0.0072..0.00723 rows=1 loops=1398)
+
