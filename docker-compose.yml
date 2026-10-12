@@ -1,10 +1,84 @@
 version: '3.8'
+
 services:
+  # === MySQL Local ===
   mysql-local:
     build: .
     container_name: mysql-local
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: 0000
+      MYSQL_ROOT_PASSWORD: "0000"
       MYSQL_DATABASE: G8
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - citusnet
+
+  # === Citus: Nodo Coordinador (Destino / Staging Central) ===
+  coordinator:
+    image: citusdata/citus:12.1
+    container_name: citus_coordinator
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      POSTGRES_DB: G8
+    volumes:
+      - pgdata_citus_coord:/var/lib/postgresql/data
+      - ./init/init_citus/worker:/docker-entrypoint-initdb.d
+    networks:
+      - citusnet
+
+  # === Citus: Worker 1 (Región ESTE - 6 hubs) ===
+  worker1:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_este
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      POSTGRES_DB: G8
+    volumes:
+      - pgdata_citus_w_este:/var/lib/postgresql/data
+      - ./init/init_citus/worker:/docker-entrypoint-initdb.d
+    networks:
+      - citusnet
+
+  # === Citus: Worker 2 (Región CENTRAL - 2 hubs) ===
+  worker2:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_central
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      POSTGRES_DB: G8
+    volumes:
+      - pgdata_citus_w_central:/var/lib/postgresql/data
+      - ./init/init_citus/worker:/docker-entrypoint-initdb.d
+    networks:
+      - citusnet
+
+  # === Citus: Worker 3 (Región OESTE - 2 hubs) ===
+  worker3:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_oeste
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      POSTGRES_DB: G8
+    volumes:
+      - pgdata_citus_w_oeste:/var/lib/postgresql/data
+      - ./init/init_citus/worker:/docker-entrypoint-initdb.d
+    networks:
+      - citusnet
+
+volumes:
+  mysql_data:
+  pgdata_citus_coord:
+  pgdata_citus_w_este:
+  pgdata_citus_w_central:
+  pgdata_citus_w_oeste:
+
+networks:
+  citusnet:
