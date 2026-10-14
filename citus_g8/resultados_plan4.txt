@@ -1,0 +1,274 @@
+Plan 4 - Clúster Citus del G8. Corrida completa desde cero.
+Fecha: 2026-10-13 22:40
+
+##### docker-compose down -v
+Container citus_worker_3 Removed 
+Container citus_worker_1 Removed 
+Container citus_coordinator Removed 
+Container citus_worker_2 Removed 
+Volume citus_g8_pgdata_citus_w2 Removed 
+Volume citus_g8_pgdata_citus_w3 Removed 
+Volume citus_g8_pgdata_citus_coord Removed 
+Volume citus_g8_pgdata_citus_w1 Removed 
+Network citus_g8_citusnet Removed 
+
+##### docker-compose up -d
+Network citus_g8_citusnet Created 
+Volume citus_g8_pgdata_citus_w1 Created 
+Volume citus_g8_pgdata_citus_w2 Created 
+Volume citus_g8_pgdata_citus_w3 Created 
+Volume citus_g8_pgdata_citus_coord Created 
+Container citus_worker_2 Created 
+Container citus_worker_3 Created 
+Container citus_worker_1 Created 
+Container citus_coordinator Created 
+Container citus_worker_2 Started 
+Container citus_worker_3 Started 
+Container citus_worker_1 Started 
+Container citus_coordinator Started 
+
+##### docker ps
+NAMES               IMAGE                  STATUS                   PORTS
+citus_coordinator   citusdata/citus:12.1   Up 9 seconds (healthy)   0.0.0.0:5437->5432/tcp, [::]:5437->5432/tcp
+citus_worker_3      citusdata/citus:12.1   Up 9 seconds (healthy)   5432/tcp
+citus_worker_2      citusdata/citus:12.1   Up 9 seconds (healthy)   5432/tcp
+citus_worker_1      citusdata/citus:12.1   Up 9 seconds (healthy)   5432/tcp
+
+##### versiones
+PostgreSQL 16.6 (Debian 16.6-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+Citus 12.1.6 on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+
+##### \dx en citus_worker_1
+                     List of installed extensions
+      Name      | Version |   Schema   |         Description          
+----------------+---------+------------+------------------------------
+ citus          | 12.1-1  | pg_catalog | Citus distributed database
+ citus_columnar | 11.3-1  | pg_catalog | Citus Columnar extension
+ plpgsql        | 1.0     | pg_catalog | PL/pgSQL procedural language
+(3 rows)
+
+
+##### \dx en citus_worker_2
+                     List of installed extensions
+      Name      | Version |   Schema   |         Description          
+----------------+---------+------------+------------------------------
+ citus          | 12.1-1  | pg_catalog | Citus distributed database
+ citus_columnar | 11.3-1  | pg_catalog | Citus Columnar extension
+ plpgsql        | 1.0     | pg_catalog | PL/pgSQL procedural language
+(3 rows)
+
+
+##### \dx en citus_worker_3
+                     List of installed extensions
+      Name      | Version |   Schema   |         Description          
+----------------+---------+------------+------------------------------
+ citus          | 12.1-1  | pg_catalog | Citus distributed database
+ citus_columnar | 11.3-1  | pg_catalog | Citus Columnar extension
+ plpgsql        | 1.0     | pg_catalog | PL/pgSQL procedural language
+(3 rows)
+
+
+##### sql/plan4_coordinador.sql en citus_coordinator
+-- =====================================================================
+-- Plan 4 - Clúster Citus del G8 (Citus 12.1 / PostgreSQL 16)
+-- Se pega bloque por bloque dentro del coordinador:
+--   docker exec -it citus_coordinator psql -U postgres -d coorddb
+-- Requiere: docker-compose up -d ya ejecutado.
+-- =====================================================================
+-- ---------------------------------------------------------------------
+-- PASO 1. Confirmar que la extensión Citus quedó habilitada
+-- ---------------------------------------------------------------------
+\dx
+                     List of installed extensions
+      Name      | Version |   Schema   |         Description          
+----------------+---------+------------+------------------------------
+ citus          | 12.1-1  | pg_catalog | Citus distributed database
+ citus_columnar | 11.3-1  | pg_catalog | Citus Columnar extension
+ plpgsql        | 1.0     | pg_catalog | PL/pgSQL procedural language
+(3 rows)
+
+-- ---------------------------------------------------------------------
+-- PASO 2. Registrar los 3 nodos worker en el coordinador
+-- ---------------------------------------------------------------------
+-- Worker 1
+SELECT master_add_node('citus_worker_1', 5432);
+ master_add_node 
+-----------------
+               1
+(1 row)
+
+-- Worker 2
+SELECT master_add_node('citus_worker_2', 5432);
+ master_add_node 
+-----------------
+               2
+(1 row)
+
+-- Worker 3
+SELECT master_add_node('citus_worker_3', 5432);
+ master_add_node 
+-----------------
+               3
+(1 row)
+
+-- ---------------------------------------------------------------------
+-- PASO 3. Verificar el registro de los workers
+-- ---------------------------------------------------------------------
+SELECT * FROM master_get_active_worker_nodes();
+   node_name    | node_port 
+----------------+-----------
+ citus_worker_2 |      5432
+ citus_worker_3 |      5432
+ citus_worker_1 |      5432
+(3 rows)
+
+SELECT nodeid, groupid, nodename, nodeport, noderole, isactive
+FROM pg_dist_node
+ORDER BY nodeid;
+ nodeid | groupid |    nodename    | nodeport | noderole | isactive 
+--------+---------+----------------+----------+----------+----------
+      1 |       1 | citus_worker_1 |     5432 | primary  | t
+      2 |       2 | citus_worker_2 |     5432 | primary  | t
+      3 |       3 | citus_worker_3 |     5432 | primary  | t
+(3 rows)
+
+-- ---------------------------------------------------------------------
+-- PASO 4. Tabla fragmentadora: region
+-- ---------------------------------------------------------------------
+-- Los ids no van en orden alfabético a propósito: con 3 shards, Citus
+-- manda el id 1 al worker 1, el 3 al worker 2 y el 2 al worker 3.
+CREATE TABLE region (
+    id INT PRIMARY KEY,
+    nombre_region VARCHAR(10) NOT NULL,
+    CONSTRAINT chk_region_valida CHECK (nombre_region IN ('ESTE', 'CENTRAL', 'OESTE'))
+);
+CREATE TABLE
+INSERT INTO region (id, nombre_region)
+VALUES
+    (1, 'ESTE'),
+    (2, 'OESTE'),
+    (3, 'CENTRAL');
+INSERT 0 3
+-- Todavía no está distribuida: no aparece en pg_dist_partition
+SELECT logicalrelid::regclass, partmethod
+FROM pg_dist_partition
+WHERE logicalrelid = 'region'::regclass;
+ logicalrelid | partmethod 
+--------------+------------
+(0 rows)
+
+-- ---------------------------------------------------------------------
+-- PASO 5. Estrategia de partición: hash por id, 3 shards (uno por worker)
+-- ---------------------------------------------------------------------
+SET citus.shard_count = 3;
+SET
+SELECT create_distributed_table('region', 'id');
+NOTICE:  Copying data from local table...
+NOTICE:  copying the data has completed
+DETAIL:  The local data in the table is no longer visible, but is still on disk.
+HINT:  To remove the local data, run: SELECT truncate_local_data_after_distributing_table($$public.region$$)
+ create_distributed_table 
+--------------------------
+ 
+(1 row)
+
+-- ---------------------------------------------------------------------
+-- PASO 6. Verificar que la tabla esté distribuida y dónde están los shards
+-- ---------------------------------------------------------------------
+SELECT logicalrelid::regclass, partmethod, colocationid
+FROM pg_dist_partition
+WHERE logicalrelid = 'region'::regclass;
+ logicalrelid | partmethod | colocationid 
+--------------+------------+--------------
+ region       | h          |            1
+(1 row)
+
+SELECT
+    s.shardid,
+    n.nodename,
+    n.nodeport,
+    n.noderole
+FROM pg_dist_placement p
+JOIN pg_dist_shard s ON p.shardid = s.shardid
+JOIN pg_dist_node n ON p.groupid = n.groupid
+WHERE s.logicalrelid = 'region'::regclass
+ORDER BY s.shardid;
+ shardid |    nodename    | nodeport | noderole 
+---------+----------------+----------+----------
+  102008 | citus_worker_1 |     5432 | primary
+  102009 | citus_worker_2 |     5432 | primary
+  102010 | citus_worker_3 |     5432 | primary
+(3 rows)
+
+SELECT colocationid, shardcount, replicationfactor, distributioncolumntype::regtype
+FROM pg_dist_colocation;
+ colocationid | shardcount | replicationfactor | distributioncolumntype 
+--------------+------------+-------------------+------------------------
+            1 |          3 |                 1 | integer
+(1 row)
+
+-- ---------------------------------------------------------------------
+-- PASO 7. Datos distribuidos: desde el coordinador se ven las 3 regiones
+-- ---------------------------------------------------------------------
+SELECT * FROM region;
+ id | nombre_region 
+----+---------------
+  1 | ESTE
+  3 | CENTRAL
+  2 | OESTE
+(3 rows)
+
+-- ---------------------------------------------------------------------
+-- PASO 8. Datos físicos de cada shard (fuera de psql, en la carpeta
+--         del proyecto; usar los shardid que dio el PASO 6)
+-- ---------------------------------------------------------------------
+-- docker exec -it citus_worker_1 psql -U postgres -d coorddb -c "SELECT * FROM region_102008;"
+-- docker exec -it citus_worker_2 psql -U postgres -d coorddb -c "SELECT * FROM region_102009;"
+-- docker exec -it citus_worker_3 psql -U postgres -d coorddb -c "SELECT * FROM region_102010;"
+
+##### PASO 8. Datos físicos de cada shard
+$ docker exec -it citus_worker_1 psql -U postgres -d coorddb -c "SELECT * FROM region_102008;"
+ id | nombre_region 
+----+---------------
+  1 | ESTE
+(1 row)
+
+$ docker exec -it citus_worker_2 psql -U postgres -d coorddb -c "SELECT * FROM region_102009;"
+ id | nombre_region 
+----+---------------
+  3 | CENTRAL
+(1 row)
+
+$ docker exec -it citus_worker_3 psql -U postgres -d coorddb -c "SELECT * FROM region_102010;"
+ id | nombre_region 
+----+---------------
+  2 | OESTE
+(1 row)
+
+##### Datos distribuidos frente a datos físicos
+$ SELECT * FROM region;  (en citus_worker_1)
+ id | nombre_region 
+----+---------------
+  1 | ESTE
+  3 | CENTRAL
+  2 | OESTE
+(3 rows)
+
+##### Reinicio: docker-compose stop / start
+Container citus_coordinator Stopped 
+Container citus_worker_1 Stopped 
+Container citus_worker_3 Stopped 
+Container citus_worker_2 Stopped 
+Container citus_worker_3 Started 
+Container citus_worker_1 Started 
+Container citus_coordinator Started 
+Container citus_worker_2 Started 
+
+$ SELECT * FROM region ORDER BY id;  (en citus_coordinator, después del reinicio)
+ id | nombre_region 
+----+---------------
+  1 | ESTE
+  2 | OESTE
+  3 | CENTRAL
+(3 rows)
+

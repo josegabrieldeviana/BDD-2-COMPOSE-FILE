@@ -1,0 +1,74 @@
+# Igual al docker-compose de la Prepa 4.2, con una línea más por servicio:
+# PGPASSWORD. Sin ella, después de un stop/start los nodos no pueden
+# autenticarse entre sí ("fe_sendauth: no password supplied").
+services:
+  # === Citus: coordinador ===
+  citus_coordinator:
+    image: citusdata/citus:12.1
+    container_name: citus_coordinator
+    ports:
+      - "5437:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      PGPASSWORD: "0000"
+      POSTGRES_DB: coorddb
+    volumes:
+      - pgdata_citus_coord:/var/lib/postgresql/data
+      - ./init/init_citus/coord:/docker-entrypoint-initdb.d
+    networks:
+      - citusnet
+
+  # === Citus: worker 1 ===
+  citus_worker_1:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      PGPASSWORD: "0000"
+      POSTGRES_DB: coorddb
+    volumes:
+      - pgdata_citus_w1:/var/lib/postgresql/data
+      - ./init/init_citus/worker:/docker-entrypoint-initdb.d
+    networks:
+      - citusnet
+
+  # === Citus: worker 2 ===
+  citus_worker_2:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      PGPASSWORD: "0000"
+      POSTGRES_DB: coorddb
+    volumes:
+      - pgdata_citus_w2:/var/lib/postgresql/data
+      - ./init/init_citus/worker:/docker-entrypoint-initdb.d
+    networks:
+      - citusnet
+
+  # === Citus: worker 3 ===
+  citus_worker_3:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_3
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      PGPASSWORD: "0000"
+      POSTGRES_DB: coorddb
+    volumes:
+      - pgdata_citus_w3:/var/lib/postgresql/data
+      - ./init/init_citus/worker:/docker-entrypoint-initdb.d
+    networks:
+      - citusnet
+
+volumes:
+  pgdata_citus_coord:
+  pgdata_citus_w1:
+  pgdata_citus_w2:
+  pgdata_citus_w3:
+
+networks:
+  citusnet:
