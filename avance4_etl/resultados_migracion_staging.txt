@@ -1,0 +1,30 @@
+NOTICE:  table "segmento_boleto" does not exist, skipping
+NOTICE:  table "movimiento_equipaje" does not exist, skipping
+NOTICE:  table "equipaje" does not exist, skipping
+NOTICE:  table "reserva_pnr" does not exist, skipping
+NOTICE:  table "boleto" does not exist, skipping
+NOTICE:  table "pase_abordaje" does not exist, skipping
+NOTICE:  table "asignacion_puerta" does not exist, skipping
+NOTICE:  table "vuelo_operado" does not exist, skipping
+NOTICE:  table "vuelo_programado" does not exist, skipping
+NOTICE:  table "check_in" does not exist, skipping
+NOTICE:  table "tarifa" does not exist, skipping
+NOTICE:  table "pasajero" does not exist, skipping
+NOTICE:  table "hub" does not exist, skipping
+NOTICE:  table "aeropuerto" does not exist, skipping
+NOTICE:  table "region" does not exist, skipping
+region                 mysql=3        postgres=3
+aeropuerto             mysql=42       postgres=42
+hub                    mysql=10       postgres=10
+pasajero               mysql=100000   postgres=100000
+tarifa                 mysql=50       postgres=50
+check_in               mysql=150000   postgres=150000
+vuelo_programado       mysql=50000    postgres=50000
+vuelo_operado          mysql=50000    postgres=50000
+asignacion_puerta      mysql=50000    postgres=50000
+pase_abordaje          mysql=150000   postgres=150000
+boleto                 mysql=200000   postgres=200000
+reserva_pnr            mysql=100000   postgres=100000
+equipaje               mysql=100000   postgres=100000
+movimiento_equipaje    mysql=300000   postgres=300000
+segmento_boleto        mysql=150000   postgres=150000

@@ -1,0 +1,37 @@
+Maletas de la muestra: 3000
+
+Documentos por colección:
+  telemetria_escanner_equipaje      9285
+  inspecciones_seguridad_tsa        3000
+  notificaciones_pasajero           3000
+  resenas_servicio_pasajero         1205
+  mantenimiento_infraestructura      428
+
+Campos opcionales (documentos que los traen):
+  telemetria_escanner_equipaje: 
+  inspecciones_seguridad_tsa: articulos_inspeccionados 437, observaciones 441, retencion 220
+  notificaciones_pasajero: compensacion 255
+  resenas_servicio_pasajero: comentario 722, etiquetas_aspectos 850, evaluacion_equipaje 1023
+  mantenimiento_infraestructura: duracion_horas 297, repuestos_utilizados 325
+
+Inspección: APROBADO 2339, APROBADO_CON_OBSERVACION 441, RETENIDO 220
+  con apertura manual: 14.6 %
+  hechas en el aeropuerto de conexión: 11.6 %
+
+Transferencia con desvío: 15.4 %
+  conexión en hub: 9.8 % · conexión fuera de hub: 17.1 %
+  ruta dentro de una región: 10.8 % · entre regiones: 15.8 %
+  con apertura manual: 26.8 % · sin apertura: 13.4 %
+
+Tránsito en origen (min, check-in a última lectura): promedio 31.5
+  con apertura manual: 51.8 · sin apertura: 28.1
+
+Espera en carrusel (min, lectura de llegada a entrega): promedio 16.1
+  hasta 20 min: 74.6 %
+  por región de destino: ESTE 16.1 · CENTRAL 16.0 · OESTE 16.1
+  con desvío: 24.6 · sin desvío: 14.5
+
+Notificaciones: EQUIPAJE_EN_CARRUSEL 1278, EQUIPAJE_DEMORADO 765, EQUIPAJE_EN_CONEXION 737, EQUIPAJE_RETENIDO 220
+  con compensación: 255 (total USD 19825.00)
+
+Maletas con sobrepeso (> 23 kg en el check-in de SQL) -> ALERTA_PESO: 28.9 %

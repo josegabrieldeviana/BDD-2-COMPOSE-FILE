@@ -1,0 +1,6 @@
+MODO: APLICAR (se reemplazan los documentos)
+telemetria_escanner_equipaje: en archivo 9285 · antes 0 · insertados 9285 · después 9285 · validador strict/error · no cumplen 0
+inspecciones_seguridad_tsa: en archivo 3000 · antes 0 · insertados 3000 · después 3000 · validador strict/error · no cumplen 0
+notificaciones_pasajero: en archivo 3000 · antes 0 · insertados 3000 · después 3000 · validador strict/error · no cumplen 0
+resenas_servicio_pasajero: en archivo 1205 · antes 0 · insertados 1205 · después 1205 · validador strict/error · no cumplen 0
+mantenimiento_infraestructura: en archivo 428 · antes 0 · insertados 428 · después 428 · validador strict/error · no cumplen 0

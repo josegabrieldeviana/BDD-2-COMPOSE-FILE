@@ -1,0 +1,180 @@
+== bases y colecciones ==
+aeropuerto_nosql.resenas_servicio_pasajero	200 docs	con validador
+aeropuerto_nosql.mantenimiento_infraestructura	200 docs	con validador
+aeropuerto_nosql.telemetria_escanner_equipaje	200 docs	con validador
+aeropuerto_nosql.inspecciones_seguridad_tsa	200 docs	con validador
+aeropuerto_nosql.notificaciones_pasajero	200 docs	con validador
+sample_mflix.telemetria_escanner_equipaje	0 docs	con validador
+sample_mflix.mantenimiento_infraestructura	0 docs	con validador
+sample_mflix.notificaciones_pasajero	0 docs	con validador
+sample_mflix.resenas_servicio_pasajero	0 docs	con validador
+sample_mflix.inspecciones_seguridad_TSA	0 docs	con validador
+
+== formatos de las claves que cruzan con SQL ==
+telemetria_escanner_equipaje.codigo_etiqueta	formato ok 200/200	distintos 200	ejemplo TAG0070710
+inspecciones_seguridad_tsa.codigo_etiqueta	formato ok 200/200	distintos 200	ejemplo TAG0016079
+notificaciones_pasajero.codigo_etiqueta	formato ok 200/200	distintos 200	ejemplo TAG0079536
+telemetria_escanner_equipaje.codigo_aeropuerto	formato ok 200/200	distintos 7	ejemplo EWR
+inspecciones_seguridad_tsa.codigo_aeropuerto	formato ok 200/200	distintos 7	ejemplo EWR
+mantenimiento_infraestructura.codigo_aeropuerto	formato ok 200/200	distintos 7	ejemplo DFW
+resenas_servicio_pasajero.numero_vuelo	formato ok 200/200	distintos 178	ejemplo DL1489
+
+== tipos de dato de fechas e identificadores ==
+telemetria_escanner_equipaje.timestamp	date: 200 [{"$date":"2026-10-23T18:51:40.334Z"} .. {"$date":"2026-10-30T15:41:40.334Z"}]
+inspecciones_seguridad_tsa.timestamp	date: 200 [{"$date":"2026-10-22T07:51:40.339Z"} .. {"$date":"2026-10-30T13:51:40.339Z"}]
+mantenimiento_infraestructura.fecha_mantenimiento	date: 200 [{"$date":"2026-07-02T15:51:40.338Z"} .. {"$date":"2026-10-29T15:51:40.337Z"}]
+resenas_servicio_pasajero.fecha_registro	date: 200 [{"$date":"2026-08-31T15:51:40.336Z"} .. {"$date":"2026-10-29T15:51:40.337Z"}]
+notificaciones_pasajero.estado_envio.timestamp_lectura	date: 200 [{"$date":"2026-10-30T14:11:40.338Z"} .. {"$date":"2026-10-30T15:50:40.338Z"}]
+notificaciones_pasajero.id_pasajero	int: 200 [613 .. 99087]
+resenas_servicio_pasajero.id_pasajero	int: 200 [1195 .. 99979]
+mantenimiento_infraestructura.costo_total_usd	double: 200 [240.99 .. 3484.88]
+
+== campos presentes por coleccion (diversidad estructural) ==
+inspecciones_seguridad_tsa	_id(200,string) agente_responsable(200,object) articulos_inspeccionados(200,array) codigo_aeropuerto(200,string) codigo_etiqueta(200,string) requiere_apertura_manual(200,bool) resultado_inspeccion(200,string) timestamp(200,date)
+mantenimiento_infraestructura	_id(200,string) codigo_aeropuerto(200,string) costo_total_usd(200,double) equipo(200,object) fecha_mantenimiento(200,date) repuestos_utilizados(200,array) tecnicos_asignados(200,array) tipo_intervencion(200,string)
+notificaciones_pasajero	_id(200,string) canal(200,string) codigo_etiqueta(200,string) contenido_mensaje(200,object) estado_envio(200,object) id_pasajero(200,int) tipo_evento(200,string)
+resenas_servicio_pasajero	_id(200,string) calificacion_general(200,int) comentario(200,string) etiquetas_aspectos(200,array) evaluacion_equipaje(200,object) fecha_registro(200,date) id_pasajero(200,int) numero_vuelo(200,string)
+telemetria_escanner_equipaje	_id(200,string) alertas_detectadas(200,array) codigo_aeropuerto(200,string) codigo_etiqueta(200,string) metricas_sensor(200,object) timestamp(200,date) ubicacion_escaner(200,object)
+
+== dominios que alimentan dimensiones y banderas ==
+inspecciones_seguridad_tsa.resultado_inspeccion	APROBADO_CON_OBSERVACION=72, RETENIDO=67, APROBADO=61
+inspecciones_seguridad_tsa.requiere_apertura_manual	false=102, true=98
+inspecciones_seguridad_tsa.agente_responsable.departamento	Seguridad de Equipaje Facturado=200
+telemetria_escanner_equipaje.alertas_detectadas	null=63, DESVIACION_LIGERA=57, ESCANEADO_DUPLICADO=54, LECTURA_RAPIDA=47, ALERTA_PESO=40
+notificaciones_pasajero.tipo_evento	EQUIPAJE_EN_CARRUSEL=200
+notificaciones_pasajero.canal	EMAIL=72, SMS=67, APP_PUSH=61
+mantenimiento_infraestructura.tipo_intervencion	EMERGENCIA=73, PREVENTIVO=64, CORRECTIVO=63
+mantenimiento_infraestructura.equipo.tipo	Brazo Clasificador=52, Escáner Rayos X 3D=52, Carrusel de Entrega=49, Cinta Transportadora Principal=47
+resenas_servicio_pasajero.calificacion_general	3=49, 1=42, 5=40, 4=39, 2=30
+resenas_servicio_pasajero.evaluacion_equipaje.estado_maleta	GOLPEADO=73, RAYADO=68, INTACTO=59
+
+== cruces entre inspeccion y resultado ==
+APROBADO	apertura_manual=false	26	articulos_prom=1.00
+APROBADO	apertura_manual=true	35	articulos_prom=1.00
+APROBADO_CON_OBSERVACION	apertura_manual=false	40	articulos_prom=1.00
+APROBADO_CON_OBSERVACION	apertura_manual=true	32	articulos_prom=1.00
+RETENIDO	apertura_manual=false	36	articulos_prom=1.00
+RETENIDO	apertura_manual=true	31	articulos_prom=1.00
+
+== maletas con mas de un documento por coleccion ==
+telemetria_escanner_equipaje	200 maletas con 1 doc
+inspecciones_seguridad_tsa	200 maletas con 1 doc
+notificaciones_pasajero	200 maletas con 1 doc
+etiquetas en comun	telemetria∩inspeccion 0	telemetria∩notificacion 0	inspeccion∩notificacion 0
+
+== un documento de ejemplo por coleccion ==
+inspecciones_seguridad_tsa
+{
+ "_id": "INSP-0050",
+ "codigo_etiqueta": "TAG0016079",
+ "codigo_aeropuerto": "EWR",
+ "agente_responsable": {
+  "id_agente": "TSA-4896",
+  "departamento": "Seguridad de Equipaje Facturado"
+ },
+ "resultado_inspeccion": "RETENIDO",
+ "requiere_apertura_manual": false,
+ "articulos_inspeccionados": [
+  {
+   "categoria": "Electrónicos",
+   "descripcion": "Batería externa Powerbank",
+   "permitido": true
+  }
+ ],
+ "timestamp": {
+  "$date": "2026-10-25T04:51:40.339Z"
+ }
+}
+mantenimiento_infraestructura
+{
+ "_id": "MNT-0013",
+ "codigo_aeropuerto": "DFW",
+ "equipo": {
+  "id_equipo": "EQP-481",
+  "tipo": "Carrusel de Entrega",
+  "fabricante": "Siemens Logistics"
+ },
+ "tipo_intervencion": "EMERGENCIA",
+ "costo_total_usd": 809.17,
+ "tecnicos_asignados": [
+  "TEC-56",
+  "TEC-63"
+ ],
+ "repuestos_utilizados": [
+  {
+   "nombre_repuesto": "Rodamiento industrial",
+   "cantidad": 2,
+   "costo_unitario": 120
+  },
+  {
+   "nombre_repuesto": "Banda reforzada",
+   "cantidad": 1,
+   "costo_unitario": 450
+  }
+ ],
+ "fecha_mantenimiento": {
+  "$date": "2026-09-03T15:51:40.337Z"
+ }
+}
+notificaciones_pasajero
+{
+ "_id": "NOT-0004",
+ "id_pasajero": 60091,
+ "codigo_etiqueta": "TAG0079536",
+ "canal": "APP_PUSH",
+ "tipo_evento": "EQUIPAJE_EN_CARRUSEL",
+ "contenido_mensaje": {
+  "titulo": "¡Tu equipaje ha llegado!",
+  "cuerpo": "Su maleta ya está en el carrusel 8.",
+  "idioma": "ES"
+ },
+ "estado_envio": {
+  "enviado": true,
+  "leido": false,
+  "timestamp_lectura": {
+   "$date": "2026-10-30T15:31:40.338Z"
+  }
+ }
+}
+resenas_servicio_pasajero
+{
+ "_id": "RES-0005",
+ "id_pasajero": 99943,
+ "numero_vuelo": "DL1489",
+ "calificacion_general": 1,
+ "evaluacion_equipaje": {
+  "tiempo_espera_minutos": 48,
+  "estado_maleta": "RAYADO",
+  "atencion_personal": "REGULAR"
+ },
+ "etiquetas_aspectos": [
+  "cinta_despejada"
+ ],
+ "comentario": "El equipaje llegó muy rápido al carrusel.",
+ "fecha_registro": {
+  "$date": "2026-10-09T15:51:40.336Z"
+ }
+}
+telemetria_escanner_equipaje
+{
+ "_id": "TEL-0007",
+ "codigo_etiqueta": "TAG0070710",
+ "codigo_aeropuerto": "EWR",
+ "timestamp": {
+  "$date": "2026-10-26T18:07:40.334Z"
+ },
+ "ubicacion_escaner": {
+  "terminal": "TC",
+  "cinta": "C-15",
+  "nivel_zona": "Subsuelo-B"
+ },
+ "metricas_sensor": {
+  "temperatura_c": 25.8,
+  "nivel_bateria_pct": 81,
+  "intensidad_senal_dbm": -50
+ },
+ "alertas_detectadas": [
+  "DESVIACION_LIGERA",
+  "ESCANEADO_DUPLICADO"
+ ]
+}

@@ -1,0 +1,127 @@
+﻿== 1. Filas por tabla
+           tabla           | filas 
+---------------------------+-------
+ dim_tiempo                |   320
+ dim_region                |     3
+ dim_aeropuerto            |    42
+ dim_vuelo                 |   801
+ dim_estado_inspeccion     |     4
+ dim_tipo_equipaje         |     6
+ fact_equipaje_procesado   | 90112
+ fact_incidencias_equipaje |  3000
+(8 rows)
+
+== 2. Dimensiones pequeÃ±as completas
+ sk_region | nombre_region | pais_principal 
+-----------+---------------+----------------
+         1 | CENTRAL       | Estados Unidos
+         2 | ESTE          | Estados Unidos
+         3 | OESTE         | Estados Unidos
+(3 rows)
+
+ sk_estado_inspeccion |      codigo_estado       |           descripcion_estado            | es_apta_embarque | requiere_intervencion 
+----------------------+--------------------------+-----------------------------------------+------------------+-----------------------
+                    0 | SIN_INSPECCION           | Sin inspección registrada en MongoDB    | t                | f
+                    1 | APROBADO                 | Aprobado sin observaciones              | t                | f
+                    2 | APROBADO_CON_OBSERVACION | Aprobado con observaciones de seguridad | t                | t
+                    3 | RETENIDO                 | Retenido para revisión adicional        | f                | t
+(4 rows)
+
+ sk_tipo_equipaje |        categoria         | prioridad_entrega 
+------------------+--------------------------+-------------------
+                1 | Estándar (10 a 23 kg)    | Normal
+                2 | Estándar (10 a 23 kg)    | Prioritaria
+                3 | Ligera (menos de 10 kg)  | Normal
+                4 | Ligera (menos de 10 kg)  | Prioritaria
+                5 | Sobrepeso (más de 23 kg) | Normal
+                6 | Sobrepeso (más de 23 kg) | Prioritaria
+(6 rows)
+
+ sk_aeropuerto | codigo_iata |            nombre_aeropuerto            |   ciudad    | estado | es_hub 
+---------------+-------------+-----------------------------------------+-------------+--------+--------
+             8 | CLT         | Charlotte Douglas International Airport | Charlotte   | NC     | t
+            11 | DFW         | Dallas/Fort Worth International Airport | Dallas      | TX     | t
+            18 | LAX         | Los Angeles International Airport       | Los Angeles | CA     | t
+            28 | ORD         | Chicago O'Hare International Airport    | Chicago     | IL     | t
+            35 | SAT         | San Antonio International Airport       | San Antonio | TX     | f
+(5 rows)
+
+ sk_vuelo | numero_vuelo | codigo_aerolinea |     aerolinea      
+----------+--------------+------------------+--------------------
+        0 | ------       | --               | Sin vuelo asignado
+        1 | AA1000       | AA               | American Airlines
+        2 | AA1004       | AA               | American Airlines
+      800 | WN1799       | WN               | Southwest Airlines
+(4 rows)
+
+== 3. dim_tiempo: rango, SK en orden de fecha y atributos calculados contra PostgreSQL
+   desde    |   hasta    | dias | sk_igual_al_orden_de_fecha | atributos_mal_calculados 
+------------+------------+------+----------------------------+--------------------------
+ 2026-01-01 | 2026-11-16 |  320 | t                          |                        0
+(1 row)
+
+ fecha_completa | nombre_mes | dia_semana | es_fin_de_semana 
+----------------+------------+------------+------------------
+ 2026-11-13     | Noviembre  | Viernes    | f
+ 2026-11-14     | Noviembre  | Sábado     | t
+ 2026-11-15     | Noviembre  | Domingo    | t
+ 2026-11-16     | Noviembre  | Lunes      | f
+(4 rows)
+
+== 4. fact_equipaje_procesado: claves desconocidas y nulos
+ filas | sin_vuelo | sin_inspeccion | con_telemetria | con_conexion | ruta_directa | maletas_distintas 
+-------+-----------+----------------+----------------+--------------+--------------+-------------------
+ 90112 |     22421 |          87112 |           3000 |        85830 |         4282 |             90112
+(1 row)
+
+== 5. Medidas (solo maletas con telemetrÃ­a): deben coincidir con el ensayo de MongoDB
+ transito_prom_min | entrega_prom_min | entrega_min | entrega_max | pct_a_tiempo | pct_transferencia_exitosa | peso_prom 
+-------------------+------------------+-------------+-------------+--------------+---------------------------+-----------
+              31.5 |             16.1 |        4.00 |       36.83 |         74.6 |                      84.6 |     17.64
+(1 row)
+
+ reglas_a_tiempo_inconsistentes | tiempos_con_fraccion 
+--------------------------------+----------------------
+                              0 |                 2809
+(1 row)
+
+== 6. DistribuciÃ³n por estado de inspecciÃ³n y por tipo de equipaje
+      codigo_estado       | maletas 
+--------------------------+---------
+ SIN_INSPECCION           |   87112
+ APROBADO                 |    2339
+ APROBADO_CON_OBSERVACION |     441
+ RETENIDO                 |     220
+(4 rows)
+
+        categoria         | prioridad_entrega | maletas | peso_min | peso_max 
+--------------------------+-------------------+---------+----------+----------
+ Estándar (10 a 23 kg)    | Normal            |   37599 |    10.00 |    23.00
+ Estándar (10 a 23 kg)    | Prioritaria       |    9331 |    10.00 |    23.00
+ Ligera (menos de 10 kg)  | Normal            |   14488 |     5.00 |     9.99
+ Ligera (menos de 10 kg)  | Prioritaria       |    3494 |     5.00 |     9.99
+ Sobrepeso (más de 23 kg) | Normal            |   20145 |    23.01 |    29.99
+ Sobrepeso (más de 23 kg) | Prioritaria       |    5055 |    23.01 |    29.99
+(6 rows)
+
+== 7. fact_incidencias_equipaje
+ filas | retenidas | con_apertura | en_conexion | con_tiempo_resolucion | con_compensacion | total_compensado | sin_vuelo 
+-------+-----------+--------------+-------------+-----------------------+------------------+------------------+-----------
+  3000 |       220 |          437 |         347 |                   220 |              255 |         19825.00 |         0
+(1 row)
+
+         tipo_incidencia          | count 
+----------------------------------+-------
+ Inspección sin novedad           |  2339
+ Observación de seguridad         |   441
+ Documentación incompleta         |    64
+ Imagen de rayos X no concluyente |    56
+ Alerta de trazas químicas        |    53
+ Artículo prohibido               |    47
+(6 rows)
+
+ inspecciones_con_su_maleta | conexion_inconsistente 
+----------------------------+------------------------
+                       3000 |                      0
+(1 row)
+

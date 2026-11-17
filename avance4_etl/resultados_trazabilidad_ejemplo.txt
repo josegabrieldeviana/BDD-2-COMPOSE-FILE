@@ -1,0 +1,35 @@
+== Staging (PostgreSQL g8_staging): eventos de TAG0096232
+ codigo_etiqueta | tipo_evento |  timestamp_evento   | peso_kg | itinerario_vuelos | numero_vuelo 
+-----------------+-------------+---------------------+---------+-------------------+--------------
+ TAG0096232      | check_in    | 2026-07-02 19:10:00 |   12.80 | LAS-LAX LAX-SAN   | WN1195
+ TAG0096232      | cargado     | 2026-07-02 20:40:00 |   23.49 | LAS-LAX LAX-SAN   | WN1195
+ TAG0096232      | entregado   | 2026-07-02 22:10:00 |   25.17 | LAS-LAX LAX-SAN   | WN1195
+(3 rows)
+
+== MongoDB (aeropuerto_nosql): documentos de TAG0096232
+{"_id":"TEL-0000","codigo_aeropuerto":"LAS","timestamp":{"$date":"2026-07-02T19:39:26Z"},"punto_control":"FACTURACION","alertas_detectadas":[]}
+{"_id":"TEL-0001","codigo_aeropuerto":"LAX","timestamp":{"$date":"2026-07-02T21:13:49Z"},"punto_control":"TRANSFERENCIA","alertas_detectadas":[]}
+{"_id":"TEL-0002","codigo_aeropuerto":"SAN","timestamp":{"$date":"2026-07-02T21:49:31Z"},"punto_control":"CARRUSEL","alertas_detectadas":["ESCANEADO_DUPLICADO"]}
+{"_id":"INSP-0000","codigo_aeropuerto":"LAS","resultado_inspeccion":"APROBADO","requiere_apertura_manual":false,"timestamp":{"$date":"2026-07-02T19:31:29Z"}}
+== Data Mart (g8_datamart): fila del hecho de TAG0096232
+-[ RECORD 1 ]-----------+----------------------
+sk_fact_procesado       | 86747
+tag_rfid_bag            | TAG0096232
+fecha_completa          | 2026-07-02
+origen                  | LAS
+conexion                | LAX
+destino                 | SAN
+region_origen           | OESTE
+region_destino          | OESTE
+numero_vuelo            | WN1195
+aerolinea               | Southwest Airlines
+codigo_estado           | APROBADO
+categoria               | Estándar (10 a 23 kg)
+prioridad_entrega       | Normal
+peso_kg                 | 12.80
+tiempo_transito_bhs_min | 29.43
+tiempo_entrega_min      | 20.48
+fue_entregado_a_tiempo  | 0
+es_conexion             | 1
+transferencia_exitosa   | 1
+

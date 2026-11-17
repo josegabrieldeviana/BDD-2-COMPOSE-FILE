@@ -1,0 +1,6 @@
+MODO: SIMULACRO (no se escribe nada)
+telemetria_escanner_equipaje: en archivo 9285 · antes 200 · insertados 0 · después 200 · validador strict/error · no cumplen 0
+inspecciones_seguridad_tsa: en archivo 3000 · antes 200 · insertados 0 · después 200 · validador strict/error · no cumplen 0
+notificaciones_pasajero: en archivo 3000 · antes 200 · insertados 0 · después 200 · validador strict/error · no cumplen 0
+resenas_servicio_pasajero: en archivo 1205 · antes 200 · insertados 0 · después 200 · validador strict/error · no cumplen 0
+mantenimiento_infraestructura: en archivo 428 · antes 200 · insertados 0 · después 200 · validador strict/error · no cumplen 0

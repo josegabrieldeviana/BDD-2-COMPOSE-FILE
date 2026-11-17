@@ -1,0 +1,6 @@
+# Generados al correr el ETL o el generador de MongoDB (se recrean)
+pentaho/logs/
+pentaho/descartes/
+mongo_v2/salida/*.json
+mongo_v2/salida/muestra_maletas.tsv
+mongo_v2/respaldo_atlas_*/

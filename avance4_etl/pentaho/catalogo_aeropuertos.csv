@@ -1,0 +1,43 @@
+codigo_iata;nombre_aeropuerto;ciudad;estado
+ABQ;Albuquerque International Sunport;Albuquerque;NM
+ATL;Hartsfield-Jackson Atlanta International Airport;Atlanta;GA
+AUS;Austin-Bergstrom International Airport;Austin;TX
+BNA;Nashville International Airport;Nashville;TN
+BOS;Boston Logan International Airport;Boston;MA
+BWI;Baltimore/Washington International Airport;Baltimore;MD
+CLE;Cleveland Hopkins International Airport;Cleveland;OH
+CLT;Charlotte Douglas International Airport;Charlotte;NC
+DCA;Ronald Reagan Washington National Airport;Washington;VA
+DEN;Denver International Airport;Denver;CO
+DFW;Dallas/Fort Worth International Airport;Dallas;TX
+DTW;Detroit Metropolitan Wayne County Airport;Detroit;MI
+EWR;Newark Liberty International Airport;Newark;NJ
+IAD;Washington Dulles International Airport;Washington;VA
+IAH;George Bush Intercontinental Airport;Houston;TX
+JFK;John F. Kennedy International Airport;New York;NY
+LAS;Harry Reid International Airport;Las Vegas;NV
+LAX;Los Angeles International Airport;Los Angeles;CA
+LGA;LaGuardia Airport;New York;NY
+MCI;Kansas City International Airport;Kansas City;MO
+MCO;Orlando International Airport;Orlando;FL
+MDW;Chicago Midway International Airport;Chicago;IL
+MEM;Memphis International Airport;Memphis;TN
+MIA;Miami International Airport;Miami;FL
+MSP;Minneapolis-Saint Paul International Airport;Minneapolis;MN
+MSY;Louis Armstrong New Orleans International Airport;New Orleans;LA
+OAK;Oakland International Airport;Oakland;CA
+ORD;Chicago O'Hare International Airport;Chicago;IL
+PDX;Portland International Airport;Portland;OR
+PHL;Philadelphia International Airport;Philadelphia;PA
+PHX;Phoenix Sky Harbor International Airport;Phoenix;AZ
+PIT;Pittsburgh International Airport;Pittsburgh;PA
+RDU;Raleigh-Durham International Airport;Raleigh;NC
+SAN;San Diego International Airport;San Diego;CA
+SAT;San Antonio International Airport;San Antonio;TX
+SEA;Seattle-Tacoma International Airport;Seattle;WA
+SFO;San Francisco International Airport;San Francisco;CA
+SJC;San Jose Mineta International Airport;San Jose;CA
+SLC;Salt Lake City International Airport;Salt Lake City;UT
+SNA;John Wayne Airport;Santa Ana;CA
+STL;St. Louis Lambert International Airport;St. Louis;MO
+TUS;Tucson International Airport;Tucson;AZ

@@ -1,0 +1,20 @@
+# G8 · Avance 4 · PostgreSQL 16 para el ETL
+#   g8_staging  -> staging central relacional (OLTP de las Unidades 1 y 2, migrado desde MySQL)
+#   g8_datamart -> Data Mart (OLAP) que carga Pentaho y lee Metabase
+# Se reutiliza la imagen de Citus del Avance 2 porque ya trae PostgreSQL 16.6;
+# aquí funciona como un PostgreSQL normal (no se crea la extensión citus).
+services:
+  pg-g8-bi:
+    image: citusdata/citus:12.1
+    container_name: pg-g8-bi
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "0000"
+      PGPASSWORD: "0000"
+    ports:
+      - "5438:5432"
+    volumes:
+      - pg_g8_bi_data:/var/lib/postgresql/data
+      - ./sql:/sql:ro
+volumes:
+  pg_g8_bi_data:

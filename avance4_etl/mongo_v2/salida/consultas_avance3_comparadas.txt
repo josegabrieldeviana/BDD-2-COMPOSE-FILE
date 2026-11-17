@@ -1,0 +1,22 @@
+===== ATLAS (datos de hoy) =====
+find 1 ($eq) telemetría en LAX	33	
+find 2 ($in) alerta de peso o desviación	87	
+find 3 ($gte/$lte) mantenimientos de 500 a 2.000 USD	93	
+find 4 ($and+$or) retenidas o abiertas en MIA	25	
+find 5 (proyección) reseñas	200	{"id_pasajero":99943,"numero_vuelo":"DL1489","calificacion_general":1,"comentario":"El equipaje llegó muy rápido al carrusel."}
+pipeline 1 ($match+$group) correctivos por aeropuerto	7	{"_id":"LAX","costo_total_usd":26330.33,"intervenciones":15}
+pipeline 2 ($unwind+$group) hallazgos TSA por aeropuerto y categoría	7	{"_id":{"aeropuerto":"ORD","categoria":"Electrónicos"},"hallazgos":38,"retenidos":13}
+pipeline 3 ($lookup) retenidas y mantenimientos de su aeropuerto	67	{"codigo_etiqueta":"TAG0016079","codigo_aeropuerto":"EWR","inspeccion":"INSP-0050","mantenimientos_en_aeropuerto":32,"correctivos":11}
+pipeline 4 ($unwind+$replaceRoot) repuestos como raíz	400	{"nombre_repuesto":"Rodamiento industrial","cantidad":2,"costo_unitario":120,"id_mantenimiento":"MNT-0013","codigo_aeropuerto":"DFW"}
+pipeline 5 ($sort+$skip+$limit) reseñas críticas, página 1	5	{"_id":"RES-0026","id_pasajero":99797,"numero_vuelo":"WN1075","calificacion_general":1,"comentario":"Todo en perfecto estado y bien resguardado."}
+===== ENSAYO LOCAL (versión nueva) =====
+find 1 ($eq) telemetría en LAX	235	
+find 2 ($in) alerta de peso o desviación	1329	
+find 3 ($gte/$lte) mantenimientos de 500 a 2.000 USD	126	
+find 4 ($and+$or) retenidas o abiertas en MIA	3	
+find 5 (proyección) reseñas	1205	{"id_pasajero":65065,"numero_vuelo":"WN1195","calificacion_general":5}
+pipeline 1 ($match+$group) correctivos por aeropuerto	40	{"_id":"ATL","costo_total_usd":15631,"intervenciones":6}
+pipeline 2 ($unwind+$group) hallazgos TSA por aeropuerto y categoría	269	{"_id":{"aeropuerto":"PDX","categoria":"Alimentos"},"hallazgos":14,"retenidos":6}
+pipeline 3 ($lookup) retenidas y mantenimientos de su aeropuerto	220	{"codigo_etiqueta":"TAG0038541","codigo_aeropuerto":"CLE","inspeccion":"INSP-0016","mantenimientos_en_aeropuerto":9,"correctivos":3}
+pipeline 4 ($unwind+$replaceRoot) repuestos como raíz	639	{"nombre_repuesto":"Rodamiento industrial","cantidad":2,"costo_unitario":120,"id_mantenimiento":"MNT-0000","codigo_aeropuerto":"CLT"}
+pipeline 5 ($sort+$skip+$limit) reseñas críticas, página 1	5	{"_id":"RES-0732","id_pasajero":65767,"numero_vuelo":"WN1531","calificacion_general":1,"comentario":"La maleta llegó golpeada."}
