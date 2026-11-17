@@ -44,7 +44,7 @@ def paso(nombre, tipo, cuerpo, x, y):
             "<custom_distribution/><copies>1</copies><partitioning><method>none</method><schema_name/>"
             "</partitioning>%s<attributes/><cluster_schema/><remotesteps><input></input><output></output>"
             "</remotesteps><GUI><xloc>%d</xloc><yloc>%d</yloc><draw>Y</draw></GUI></step>") % (
-        e(nombre), tipo, cuerpo, x, y)
+        e(nombre), tipo, cuerpo, int(x * 1.7), int(y * 1.4))   # espaciado para que no se monten los nombres
 
 
 def table_input(n, con, sql, x, y):
@@ -636,16 +636,16 @@ PASOS_JOB = [("t01 dim_tiempo", "t01_dim_tiempo.ktr"), ("t02 dim_region", "t02_d
              ("t08 fact_incidencias_equipaje", "t08_fact_incidencias_equipaje.ktr")]
 entradas = [entrada("START", "SPECIAL", "<start>Y</start><dummy>N</dummy><repeat>N</repeat><schedulerType>0"
                     "</schedulerType><intervalSeconds>0</intervalSeconds><intervalMinutes>60</intervalMinutes>"
-                    "<hour>12</hour><minutes>0</minutes><weekDay>1</weekDay><DayOfMonth>1</DayOfMonth>", 40, 80),
-            entrada("Preparar datamart (vaciar y miembros desconocidos)", "SQL",
+                    "<hour>12</hour><minutes>0</minutes><weekDay>1</weekDay><DayOfMonth>1</DayOfMonth>", 60, 80),
+            entrada("Preparar datamart", "SQL",
                     "<sql>%s</sql><useVariableSubstitution>F</useVariableSubstitution><sqlfromfile>F</sqlfromfile>"
                     "<sqlfilename/><sendOneStatement>F</sendOneStatement><connection>%s</connection>"
-                    % (e(SQL_PREPARAR), DM), 200, 80)]
-coords = [(380, 80), (560, 80), (740, 80), (920, 80), (920, 240), (740, 240), (560, 240), (380, 240)]
+                    % (e(SQL_PREPARAR), DM), 300, 80)]
+coords = [(560, 80), (820, 80), (1080, 80), (1080, 260), (820, 260), (560, 260), (300, 260), (300, 440)]
 for (n, a), (x, y) in zip(PASOS_JOB, coords):
     entradas.append(entrada_trans(n, a, x, y))
-entradas.append(entrada("Success", "SUCCESS", "", 200, 240))
-orden = ["START", "Preparar datamart (vaciar y miembros desconocidos)"] + [n for n, _ in PASOS_JOB] + ["Success"]
+entradas.append(entrada("Success", "SUCCESS", "", 560, 440))
+orden = ["START", "Preparar datamart"] + [n for n, _ in PASOS_JOB] + ["Success"]
 hops = "".join("<hop><from>%s</from><to>%s</to><from_nr>0</from_nr><to_nr>0</to_nr><enabled>Y</enabled>"
                "<evaluation>Y</evaluation><unconditional>%s</unconditional></hop>"
                % (e(a), e(b), "Y" if a == "START" else "N") for a, b in zip(orden, orden[1:]))
